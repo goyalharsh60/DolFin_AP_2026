@@ -1,14 +1,15 @@
 -- =====================================================================
--- AP project (EquityLens): every SQL query the app uses, PostgreSQL.
+-- AP project (DolFin): every SQL query the app uses, PostgreSQL.
 -- Format: "-- <id> <READ|WRITE>: <what it does>" then the statement (ends with ;).
 -- Literal values stand in for the parameters ($1, $2 ...) of the real app.
 --
 -- Source of each query:
---   R1, R2, W1   exist in the backend today (auth_route.js, register.js; Prisma calls
---                findUnique / create written here as plain SQL).
---   R3 - R6, W2, W3   are the queries the data-fetch route (routes/data_route.js, "/fetch/:id")
---                and the ratio analysis screens need. That route is not wired into
---                server.js yet, so these are the intended queries, not running code.
+--   R1, R2, R7, W1   exist in the backend today (auth_route.js, register.js, dashboard_route.js;
+--                Prisma calls findUnique / create / user_Stock.findMany written here as plain SQL).
+--   R3 - R6, W2 - W5   are the queries the planned features need: the data-fetch route
+--                (routes/data_route.js, "/stocks/fetch/:id") returns API data but does not store it in
+--                the database yet (W2, W3), and the ratio screens (R4 - R6) and the portfolio
+--                (W4 save / W5 remove a stock) are not built. These are intended queries, not running code.
 -- =====================================================================
 
 -- R1 READ: login, find the user by email (then bcrypt compares the hash in the app)
@@ -75,3 +76,21 @@ ON CONFLICT (company_id, quarter_end) DO UPDATE
        return_on_assets = EXCLUDED.return_on_assets, return_on_equity = EXCLUDED.return_on_equity,
        total_cash = EXCLUDED.total_cash, total_debt = EXCLUDED.total_debt,
        debt_to_equity = EXCLUDED.debt_to_equity, current_ratio = EXCLUDED.current_ratio;
+
+-- R7 READ: a user's saved stocks with the latest quarter of each (JOIN user_stock, company, financial_report)
+SELECT c.ticker, c.name, c.price, c.market_cap, r.quarter_end, r.revenue, r.pat, r.return_on_equity
+FROM user_stock us
+JOIN company c ON c.company_id = us.company_id
+JOIN LATERAL (SELECT * FROM financial_report fr WHERE fr.company_id = c.company_id
+              ORDER BY fr.quarter_end DESC LIMIT 1) r ON true
+WHERE us.user_id = 50000;
+
+-- W4 WRITE: save a stock to the user's portfolio (does nothing if already saved)
+INSERT INTO user_stock (user_id, company_id)
+SELECT 77777, company_id FROM company WHERE ticker = 'TCK04999'
+ON CONFLICT (user_id, company_id) DO NOTHING;
+
+-- W5 WRITE: remove a stock from the user's portfolio
+DELETE FROM user_stock
+WHERE user_id = 50000
+  AND company_id = (SELECT company_id FROM company WHERE ticker = 'TCK02500');

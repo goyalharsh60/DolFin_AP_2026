@@ -1,7 +1,7 @@
 # AP project: normalization (CP1)
 
 App: **DolFin**, a financial statement and ratio analysis engine (Node, Express, Prisma, PostgreSQL).
-Source of the data: `prisma/schema.prisma` (models `Stock` and `User`) and the Twelve Data `eod` and `statistics` responses used in `services/data_service.js`.
+Source of the data: `prisma/schema.prisma` (models `Stock`, `User` and `User_Stock`) and the Twelve Data `eod` and `statistics` responses used in `services/data_service.js`.
 Nothing in the backend was changed to write this document. The tables below are the *proposed* final design that `dbms/03_schema.sql` (CP2) will create.
 
 ## 0. The data of the app
@@ -12,6 +12,7 @@ Nothing in the backend was changed to write this document. The tables below are 
 |---|---|
 | `Stock` | id (PK), ticker (UNIQUE), name, price, last_price_date, market_cap, price_to_sales, year, quarter, gross_margin, operating_margin, return_on_assets, return_on_equity, revenue, ebitda, pat, total_cash, total_debt, debt_to_equity, current_ratio |
 | `User` | id (PK), name, email (UNIQUE), password (a bcrypt hash, see `register.js`) |
+| `User_Stock` | (userId, stockId) composite PK; userId → User(id), stockId → Stock(id), both ON DELETE CASCADE (read by `routes/dashboard_route.js`) |
 
 ### 0.2 Where the `Stock` values come from (unnormalized form)
 One company comes back from the API as nested JSON (sample in `data_service.js`, Apple):
@@ -33,7 +34,7 @@ Mapping to the `Stock` columns: `symbol` → ticker, `meta.name` → name, `clos
 1NF needs: atomic values, no repeating groups, and a primary key.
 
 - The nested JSON is **not** 1NF (objects inside objects). Flattening it gives one row per company and fetch, which is what `Stock` is.
-- After flattening, every column holds one atomic value and `Stock` has a primary key (`id`), so `Stock` and `User` are in 1NF.
+- After flattening, every column holds one atomic value and `Stock` has a primary key (`id`), so `Stock` and `User` are in 1NF. `User_Stock` has only its two key columns, both atomic, so it is in 1NF too.
 
 Sample row of `Stock` (Apple, from the sample in the code; only some columns shown):
 
@@ -94,6 +95,12 @@ Check: in `financial_report` every non-key column depends on the whole key (a co
 
 **app_user**(user_id PK, name, email UNIQUE, password_hash)
 
+### The `User_Stock` table
+
+It has no non-key column: (userId, stockId) is the whole key, so there is nothing that can depend on part of the key or on another non-key column. It is in 2NF and 3NF already. In the final schema it is called **user_stock**, and `stockId` becomes `company_id` because `Stock` is split into company + financial_report and the stock a user saves is a company.
+
+**user_stock**(user_id PK FK, company_id PK FK)
+
 ## 4. Boyce-Codd normal form (BCNF)
 
 BCNF = for every functional dependency X → Y, X is a (super)key.
@@ -103,8 +110,9 @@ BCNF = for every functional dependency X → Y, X is a (super)key.
 | company | company_id, ticker | yes |
 | financial_report | (company_id, quarter_end) | yes |
 | app_user | user_id, email | yes |
+| user_stock | (user_id, company_id) | yes |
 
-All three tables are in **BCNF** (the optional level is reached without any further split).
+All four tables are in **BCNF** (the optional level is reached without any further split).
 
 ## 5. Final tables
 
@@ -112,9 +120,10 @@ All three tables are in **BCNF** (the optional level is reached without any furt
 |---|---|---|---|
 | company | company_id | none | UNIQUE (ticker) |
 | financial_report | (company_id, quarter_end) | company_id → company(company_id) | none |
+| user_stock | (user_id, company_id) | user_id → app_user(user_id) ON DELETE CASCADE, company_id → company(company_id) ON DELETE CASCADE | none |
 | app_user | user_id | none | UNIQUE (email) |
 
-Relationship: one company has many financial reports (1 : N). `app_user` is not linked to the other tables because the current backend has no feature that connects a user to a company (no watchlist or saved analysis yet).
+Relationships: one company has many financial reports (1 : N); a user saves many companies and a company is saved by many users (M : N), resolved by `user_stock`.
 
 ## 6. Things found in the backend that the team should know about
 
