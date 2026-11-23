@@ -1,0 +1,76 @@
+-- W3 WRITE: store the latest quarter fetched from the API (insert, or update when already stored)
+-- run with: EXPLAIN (ANALYZE, BUFFERS) inside BEGIN; ... ROLLBACK;
+INSERT INTO financial_report (company_id, quarter_end, fiscal_year_end, gross_margin, operating_margin,
+       return_on_assets, return_on_equity, revenue, ebitda, pat, total_cash, total_debt, debt_to_equity, current_ratio)
+SELECT company_id, DATE '2026-09-30', DATE '2026-03-31', 46.5, 0.29, 0.19, 1.27,
+       350000000000, 110000000000, 87000000000, 61000000000, 135000000000, 210.7, 1.06
+FROM company WHERE ticker = 'TCK02500'
+ON CONFLICT (company_id, quarter_end) DO UPDATE
+   SET revenue = EXCLUDED.revenue, ebitda = EXCLUDED.ebitda, pat = EXCLUDED.pat,
+       gross_margin = EXCLUDED.gross_margin, operating_margin = EXCLUDED.operating_margin,
+       return_on_assets = EXCLUDED.return_on_assets, return_on_equity = EXCLUDED.return_on_equity,
+       total_cash = EXCLUDED.total_cash, total_debt = EXCLUDED.total_debt,
+       debt_to_equity = EXCLUDED.debt_to_equity, current_ratio = EXCLUDED.current_ratio;
+
+=== run 1 ===
+BEGIN
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.379..0.380 rows=0 loops=1)
+   Conflict Resolution: UPDATE
+   Conflict Arbiter Indexes: pk_financial_report
+   Tuples Inserted: 0
+   Conflicting Tuples: 1
+   Buffers: shared hit=46
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.036..0.044 rows=1 loops=1)
+         Index Cond: ((ticker)::text = 'TCK02500'::text)
+         Buffers: shared hit=5
+ Planning:
+   Buffers: shared hit=108
+ Planning Time: 0.536 ms
+ Execution Time: 0.441 ms
+(13 rows)
+
+ROLLBACK
+
+=== run 2 ===
+BEGIN
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.228..0.229 rows=0 loops=1)
+   Conflict Resolution: UPDATE
+   Conflict Arbiter Indexes: pk_financial_report
+   Tuples Inserted: 0
+   Conflicting Tuples: 1
+   Buffers: shared hit=43
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.026..0.027 rows=1 loops=1)
+         Index Cond: ((ticker)::text = 'TCK02500'::text)
+         Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=108
+ Planning Time: 0.383 ms
+ Execution Time: 0.275 ms
+(13 rows)
+
+ROLLBACK
+
+=== run 3 ===
+BEGIN
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.316..0.316 rows=0 loops=1)
+   Conflict Resolution: UPDATE
+   Conflict Arbiter Indexes: pk_financial_report
+   Tuples Inserted: 0
+   Conflicting Tuples: 1
+   Buffers: shared hit=43
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.029..0.030 rows=1 loops=1)
+         Index Cond: ((ticker)::text = 'TCK02500'::text)
+         Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=108
+ Planning Time: 0.477 ms
+ Execution Time: 0.375 ms
+(13 rows)
+
+ROLLBACK

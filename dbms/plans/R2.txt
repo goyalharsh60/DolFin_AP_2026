@@ -1,0 +1,44 @@
+-- R2 READ: register, check whether the email already exists
+-- run with: EXPLAIN (ANALYZE, BUFFERS)
+SELECT user_id, name, email, password_hash
+FROM app_user
+WHERE email = 'user77777@example.com';
+
+=== run 1 ===
+                                                         QUERY PLAN                                                          
+-----------------------------------------------------------------------------------------------------------------------------
+ Index Scan using uq_app_user_email on app_user  (cost=0.42..8.44 rows=1 width=96) (actual time=0.029..0.030 rows=1 loops=1)
+   Index Cond: (email = 'user77777@example.com'::text)
+   Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=91
+ Planning Time: 0.318 ms
+ Execution Time: 0.065 ms
+(7 rows)
+
+
+=== run 2 ===
+                                                         QUERY PLAN                                                          
+-----------------------------------------------------------------------------------------------------------------------------
+ Index Scan using uq_app_user_email on app_user  (cost=0.42..8.44 rows=1 width=96) (actual time=0.033..0.034 rows=1 loops=1)
+   Index Cond: (email = 'user77777@example.com'::text)
+   Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=91
+ Planning Time: 0.412 ms
+ Execution Time: 0.087 ms
+(7 rows)
+
+
+=== run 3 ===
+                                                         QUERY PLAN                                                          
+-----------------------------------------------------------------------------------------------------------------------------
+ Index Scan using uq_app_user_email on app_user  (cost=0.42..8.44 rows=1 width=96) (actual time=0.026..0.026 rows=1 loops=1)
+   Index Cond: (email = 'user77777@example.com'::text)
+   Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=91
+ Planning Time: 0.424 ms
+ Execution Time: 0.070 ms
+(7 rows)
+

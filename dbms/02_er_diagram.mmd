@@ -1,0 +1,40 @@
+erDiagram
+    company ||--o{ financial_report : "reports quarterly results"
+    app_user ||--o{ user_stock : "saves"
+    company ||--o{ user_stock : "is saved in"
+
+    app_user {
+        int user_id PK
+        text name
+        text email UK
+        text password_hash
+    }
+    company {
+        int company_id PK
+        varchar ticker UK
+        text name
+        numeric price
+        date last_price_date
+        numeric market_cap
+        numeric price_to_sales
+    }
+    financial_report {
+        int company_id PK, FK
+        date quarter_end PK
+        date fiscal_year_end
+        numeric gross_margin
+        numeric operating_margin
+        numeric return_on_assets
+        numeric return_on_equity
+        numeric revenue
+        numeric ebitda
+        numeric pat
+        numeric total_cash
+        numeric total_debt
+        numeric debt_to_equity
+        numeric current_ratio
+    }
+    user_stock {
+        int user_id PK, FK
+        int company_id PK, FK
+    }

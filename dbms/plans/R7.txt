@@ -1,0 +1,86 @@
+-- R7 READ: a user's saved stocks with the latest quarter of each (JOIN user_stock, company, financial_report)
+-- run with: EXPLAIN (ANALYZE, BUFFERS)
+SELECT c.ticker, c.name, c.price, c.market_cap, r.quarter_end, r.revenue, r.pat, r.return_on_equity
+FROM user_stock us
+JOIN company c ON c.company_id = us.company_id
+JOIN LATERAL (SELECT * FROM financial_report fr WHERE fr.company_id = c.company_id
+              ORDER BY fr.quarter_end DESC LIMIT 1) r ON true
+WHERE us.user_id = 50000;
+
+=== run 1 ===
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=1.00..46.95 rows=3 width=71) (actual time=0.084..0.252 rows=4 loops=1)
+   Buffers: shared hit=31
+   ->  Nested Loop  (cost=0.70..33.38 rows=3 width=43) (actual time=0.052..0.140 rows=4 loops=1)
+         Buffers: shared hit=17
+         ->  Index Only Scan using pk_user_stock on user_stock us  (cost=0.42..8.47 rows=3 width=4) (actual time=0.036..0.093 rows=4 loops=1)
+               Index Cond: (user_id = 50000)
+               Heap Fetches: 1
+               Buffers: shared hit=5
+         ->  Index Scan using company_pkey on company c  (cost=0.28..8.30 rows=1 width=43) (actual time=0.010..0.010 rows=1 loops=4)
+               Index Cond: (company_id = us.company_id)
+               Buffers: shared hit=12
+   ->  Limit  (cost=0.29..4.50 rows=1 width=196) (actual time=0.026..0.027 rows=1 loops=4)
+         Buffers: shared hit=14
+         ->  Index Scan Backward using pk_financial_report on financial_report fr  (cost=0.29..84.53 rows=20 width=196) (actual time=0.026..0.026 rows=1 loops=4)
+               Index Cond: (company_id = c.company_id)
+               Buffers: shared hit=13
+ Planning:
+   Buffers: shared hit=273
+ Planning Time: 0.923 ms
+ Execution Time: 0.329 ms
+(20 rows)
+
+
+=== run 2 ===
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=1.00..46.95 rows=3 width=71) (actual time=0.059..0.112 rows=4 loops=1)
+   Buffers: shared hit=29
+   ->  Nested Loop  (cost=0.70..33.38 rows=3 width=43) (actual time=0.037..0.059 rows=4 loops=1)
+         Buffers: shared hit=17
+         ->  Index Only Scan using pk_user_stock on user_stock us  (cost=0.42..8.47 rows=3 width=4) (actual time=0.025..0.029 rows=4 loops=1)
+               Index Cond: (user_id = 50000)
+               Heap Fetches: 1
+               Buffers: shared hit=5
+         ->  Index Scan using company_pkey on company c  (cost=0.28..8.30 rows=1 width=43) (actual time=0.006..0.006 rows=1 loops=4)
+               Index Cond: (company_id = us.company_id)
+               Buffers: shared hit=12
+   ->  Limit  (cost=0.29..4.50 rows=1 width=196) (actual time=0.012..0.012 rows=1 loops=4)
+         Buffers: shared hit=12
+         ->  Index Scan Backward using pk_financial_report on financial_report fr  (cost=0.29..84.53 rows=20 width=196) (actual time=0.012..0.012 rows=1 loops=4)
+               Index Cond: (company_id = c.company_id)
+               Buffers: shared hit=12
+ Planning:
+   Buffers: shared hit=273
+ Planning Time: 0.768 ms
+ Execution Time: 0.163 ms
+(20 rows)
+
+
+=== run 3 ===
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=1.00..46.95 rows=3 width=71) (actual time=0.078..0.144 rows=4 loops=1)
+   Buffers: shared hit=29
+   ->  Nested Loop  (cost=0.70..33.38 rows=3 width=43) (actual time=0.049..0.078 rows=4 loops=1)
+         Buffers: shared hit=17
+         ->  Index Only Scan using pk_user_stock on user_stock us  (cost=0.42..8.47 rows=3 width=4) (actual time=0.034..0.040 rows=4 loops=1)
+               Index Cond: (user_id = 50000)
+               Heap Fetches: 1
+               Buffers: shared hit=5
+         ->  Index Scan using company_pkey on company c  (cost=0.28..8.30 rows=1 width=43) (actual time=0.008..0.008 rows=1 loops=4)
+               Index Cond: (company_id = us.company_id)
+               Buffers: shared hit=12
+   ->  Limit  (cost=0.29..4.50 rows=1 width=196) (actual time=0.015..0.015 rows=1 loops=4)
+         Buffers: shared hit=12
+         ->  Index Scan Backward using pk_financial_report on financial_report fr  (cost=0.29..84.53 rows=20 width=196) (actual time=0.015..0.015 rows=1 loops=4)
+               Index Cond: (company_id = c.company_id)
+               Buffers: shared hit=12
+ Planning:
+   Buffers: shared hit=273
+ Planning Time: 0.961 ms
+ Execution Time: 0.237 ms
+(20 rows)
+
