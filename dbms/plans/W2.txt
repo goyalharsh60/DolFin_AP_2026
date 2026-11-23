@@ -10,18 +10,18 @@ ON CONFLICT (ticker) DO UPDATE
 BEGIN
                                           QUERY PLAN                                           
 -----------------------------------------------------------------------------------------------
- Insert on company  (cost=0.00..0.01 rows=0 width=0) (actual time=0.280..0.281 rows=0 loops=1)
+ Insert on company  (cost=0.00..0.01 rows=0 width=0) (actual time=0.268..0.268 rows=0 loops=1)
    Conflict Resolution: UPDATE
    Conflict Arbiter Indexes: uq_company_ticker
    Tuples Inserted: 0
    Conflicting Tuples: 1
-   Buffers: shared hit=49
-   ->  Result  (cost=0.00..0.01 rows=1 width=158) (actual time=0.031..0.032 rows=1 loops=1)
+   Buffers: shared hit=56
+   ->  Result  (cost=0.00..0.01 rows=1 width=158) (actual time=0.052..0.053 rows=1 loops=1)
          Buffers: shared hit=10
  Planning:
    Buffers: shared hit=45
- Planning Time: 0.142 ms
- Execution Time: 0.333 ms
+ Planning Time: 0.115 ms
+ Execution Time: 0.313 ms
 (12 rows)
 
 ROLLBACK
@@ -30,18 +30,18 @@ ROLLBACK
 BEGIN
                                           QUERY PLAN                                           
 -----------------------------------------------------------------------------------------------
- Insert on company  (cost=0.00..0.01 rows=0 width=0) (actual time=0.219..0.219 rows=0 loops=1)
+ Insert on company  (cost=0.00..0.01 rows=0 width=0) (actual time=0.254..0.254 rows=0 loops=1)
    Conflict Resolution: UPDATE
    Conflict Arbiter Indexes: uq_company_ticker
    Tuples Inserted: 0
    Conflicting Tuples: 1
-   Buffers: shared hit=51
-   ->  Result  (cost=0.00..0.01 rows=1 width=158) (actual time=0.024..0.024 rows=1 loops=1)
+   Buffers: shared hit=55
+   ->  Result  (cost=0.00..0.01 rows=1 width=158) (actual time=0.036..0.036 rows=1 loops=1)
          Buffers: shared hit=10
  Planning:
    Buffers: shared hit=45
- Planning Time: 0.115 ms
- Execution Time: 0.260 ms
+ Planning Time: 0.119 ms
+ Execution Time: 0.302 ms
 (12 rows)
 
 ROLLBACK
@@ -50,18 +50,18 @@ ROLLBACK
 BEGIN
                                           QUERY PLAN                                           
 -----------------------------------------------------------------------------------------------
- Insert on company  (cost=0.00..0.01 rows=0 width=0) (actual time=0.231..0.232 rows=0 loops=1)
+ Insert on company  (cost=0.00..0.01 rows=0 width=0) (actual time=0.258..0.259 rows=0 loops=1)
    Conflict Resolution: UPDATE
    Conflict Arbiter Indexes: uq_company_ticker
    Tuples Inserted: 0
    Conflicting Tuples: 1
-   Buffers: shared hit=51
-   ->  Result  (cost=0.00..0.01 rows=1 width=158) (actual time=0.036..0.037 rows=1 loops=1)
+   Buffers: shared hit=55
+   ->  Result  (cost=0.00..0.01 rows=1 width=158) (actual time=0.029..0.030 rows=1 loops=1)
          Buffers: shared hit=10
  Planning:
    Buffers: shared hit=45
- Planning Time: 0.107 ms
- Execution Time: 0.298 ms
+ Planning Time: 0.129 ms
+ Execution Time: 0.307 ms
 (12 rows)
 
 ROLLBACK

@@ -1,0 +1,74 @@
+-- W4 WRITE: save a stock to the user's portfolio (does nothing if already saved)
+-- run with: EXPLAIN (ANALYZE, BUFFERS) inside BEGIN; ... ROLLBACK;
+INSERT INTO user_stock (user_id, company_id)
+SELECT 77777, company_id FROM company WHERE ticker = 'TCK04999'
+ON CONFLICT (user_id, company_id) DO NOTHING;
+
+=== run 1 ===
+BEGIN
+                                                           QUERY PLAN                                                            
+---------------------------------------------------------------------------------------------------------------------------------
+ Insert on user_stock  (cost=0.28..8.30 rows=0 width=0) (actual time=0.125..0.126 rows=0 loops=1)
+   Conflict Resolution: NOTHING
+   Conflict Arbiter Indexes: pk_user_stock
+   Tuples Inserted: 1
+   Conflicting Tuples: 0
+   Buffers: shared hit=20
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=8) (actual time=0.025..0.026 rows=1 loops=1)
+         Index Cond: ((ticker)::text = 'TCK04999'::text)
+         Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=103
+ Planning Time: 0.392 ms
+ Trigger for constraint fk_user_stock_user: time=0.360 calls=1
+ Trigger for constraint fk_user_stock_company: time=0.071 calls=1
+ Execution Time: 0.601 ms
+(15 rows)
+
+ROLLBACK
+
+=== run 2 ===
+BEGIN
+                                                           QUERY PLAN                                                            
+---------------------------------------------------------------------------------------------------------------------------------
+ Insert on user_stock  (cost=0.28..8.30 rows=0 width=0) (actual time=0.144..0.144 rows=0 loops=1)
+   Conflict Resolution: NOTHING
+   Conflict Arbiter Indexes: pk_user_stock
+   Tuples Inserted: 1
+   Conflicting Tuples: 0
+   Buffers: shared hit=20
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=8) (actual time=0.027..0.028 rows=1 loops=1)
+         Index Cond: ((ticker)::text = 'TCK04999'::text)
+         Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=103
+ Planning Time: 0.433 ms
+ Trigger for constraint fk_user_stock_user: time=0.444 calls=1
+ Trigger for constraint fk_user_stock_company: time=0.084 calls=1
+ Execution Time: 0.729 ms
+(15 rows)
+
+ROLLBACK
+
+=== run 3 ===
+BEGIN
+                                                           QUERY PLAN                                                            
+---------------------------------------------------------------------------------------------------------------------------------
+ Insert on user_stock  (cost=0.28..8.30 rows=0 width=0) (actual time=0.114..0.114 rows=0 loops=1)
+   Conflict Resolution: NOTHING
+   Conflict Arbiter Indexes: pk_user_stock
+   Tuples Inserted: 1
+   Conflicting Tuples: 0
+   Buffers: shared hit=20
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=8) (actual time=0.019..0.020 rows=1 loops=1)
+         Index Cond: ((ticker)::text = 'TCK04999'::text)
+         Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=103
+ Planning Time: 0.311 ms
+ Trigger for constraint fk_user_stock_user: time=0.323 calls=1
+ Trigger for constraint fk_user_stock_company: time=0.054 calls=1
+ Execution Time: 0.525 ms
+(15 rows)
+
+ROLLBACK

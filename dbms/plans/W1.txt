@@ -7,14 +7,14 @@ VALUES ('New User', 'new.user@example.com', '$2b$10$abcdefghijklmnopqrstuuABCDEF
 BEGIN
                                            QUERY PLAN                                           
 ------------------------------------------------------------------------------------------------
- Insert on app_user  (cost=0.00..0.01 rows=0 width=0) (actual time=0.217..0.217 rows=0 loops=1)
+ Insert on app_user  (cost=0.00..0.01 rows=0 width=0) (actual time=0.797..0.798 rows=0 loops=1)
    Buffers: shared hit=75
-   ->  Result  (cost=0.00..0.01 rows=1 width=100) (actual time=0.028..0.028 rows=1 loops=1)
+   ->  Result  (cost=0.00..0.01 rows=1 width=100) (actual time=0.568..0.569 rows=1 loops=1)
          Buffers: shared hit=10
  Planning:
    Buffers: shared hit=3
- Planning Time: 0.053 ms
- Execution Time: 0.248 ms
+ Planning Time: 0.055 ms
+ Execution Time: 0.835 ms
 (8 rows)
 
 ROLLBACK
@@ -23,14 +23,14 @@ ROLLBACK
 BEGIN
                                            QUERY PLAN                                           
 ------------------------------------------------------------------------------------------------
- Insert on app_user  (cost=0.00..0.01 rows=0 width=0) (actual time=0.225..0.226 rows=0 loops=1)
+ Insert on app_user  (cost=0.00..0.01 rows=0 width=0) (actual time=0.238..0.238 rows=0 loops=1)
    Buffers: shared hit=75
-   ->  Result  (cost=0.00..0.01 rows=1 width=100) (actual time=0.034..0.035 rows=1 loops=1)
+   ->  Result  (cost=0.00..0.01 rows=1 width=100) (actual time=0.033..0.033 rows=1 loops=1)
          Buffers: shared hit=10
  Planning:
    Buffers: shared hit=3
- Planning Time: 0.038 ms
- Execution Time: 0.258 ms
+ Planning Time: 0.046 ms
+ Execution Time: 0.268 ms
 (8 rows)
 
 ROLLBACK
@@ -39,14 +39,14 @@ ROLLBACK
 BEGIN
                                            QUERY PLAN                                           
 ------------------------------------------------------------------------------------------------
- Insert on app_user  (cost=0.00..0.01 rows=0 width=0) (actual time=0.202..0.202 rows=0 loops=1)
+ Insert on app_user  (cost=0.00..0.01 rows=0 width=0) (actual time=0.258..0.258 rows=0 loops=1)
    Buffers: shared hit=75
-   ->  Result  (cost=0.00..0.01 rows=1 width=100) (actual time=0.029..0.029 rows=1 loops=1)
+   ->  Result  (cost=0.00..0.01 rows=1 width=100) (actual time=0.030..0.030 rows=1 loops=1)
          Buffers: shared hit=10
  Planning:
    Buffers: shared hit=3
- Planning Time: 0.036 ms
- Execution Time: 0.228 ms
+ Planning Time: 0.048 ms
+ Execution Time: 0.292 ms
 (8 rows)
 
 ROLLBACK

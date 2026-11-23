@@ -1,0 +1,68 @@
+-- W5 WRITE: remove a stock from the user's portfolio
+-- run with: EXPLAIN (ANALYZE, BUFFERS) inside BEGIN; ... ROLLBACK;
+DELETE FROM user_stock
+WHERE user_id = 50000
+  AND company_id = (SELECT company_id FROM company WHERE ticker = 'TCK02500');
+
+=== run 1 ===
+BEGIN
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Delete on user_stock  (cost=8.72..16.74 rows=0 width=0) (actual time=0.094..0.095 rows=0 loops=1)
+   Buffers: shared hit=8
+   InitPlan 1 (returns $0)
+     ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=4) (actual time=0.024..0.025 rows=1 loops=1)
+           Index Cond: ((ticker)::text = 'TCK02500'::text)
+           Buffers: shared hit=3
+   ->  Index Scan using pk_user_stock on user_stock  (cost=0.42..8.44 rows=1 width=6) (actual time=0.060..0.061 rows=1 loops=1)
+         Index Cond: ((user_id = 50000) AND (company_id = $0))
+         Buffers: shared hit=7
+ Planning:
+   Buffers: shared hit=118
+ Planning Time: 0.516 ms
+ Execution Time: 0.183 ms
+(13 rows)
+
+ROLLBACK
+
+=== run 2 ===
+BEGIN
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Delete on user_stock  (cost=8.72..16.74 rows=0 width=0) (actual time=0.077..0.077 rows=0 loops=1)
+   Buffers: shared hit=8
+   InitPlan 1 (returns $0)
+     ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=4) (actual time=0.019..0.020 rows=1 loops=1)
+           Index Cond: ((ticker)::text = 'TCK02500'::text)
+           Buffers: shared hit=3
+   ->  Index Scan using pk_user_stock on user_stock  (cost=0.42..8.44 rows=1 width=6) (actual time=0.053..0.054 rows=1 loops=1)
+         Index Cond: ((user_id = 50000) AND (company_id = $0))
+         Buffers: shared hit=7
+ Planning:
+   Buffers: shared hit=118
+ Planning Time: 0.378 ms
+ Execution Time: 0.143 ms
+(13 rows)
+
+ROLLBACK
+
+=== run 3 ===
+BEGIN
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ Delete on user_stock  (cost=8.72..16.74 rows=0 width=0) (actual time=0.096..0.097 rows=0 loops=1)
+   Buffers: shared hit=8
+   InitPlan 1 (returns $0)
+     ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=4) (actual time=0.024..0.025 rows=1 loops=1)
+           Index Cond: ((ticker)::text = 'TCK02500'::text)
+           Buffers: shared hit=3
+   ->  Index Scan using pk_user_stock on user_stock  (cost=0.42..8.44 rows=1 width=6) (actual time=0.062..0.063 rows=1 loops=1)
+         Index Cond: ((user_id = 50000) AND (company_id = $0))
+         Buffers: shared hit=7
+ Planning:
+   Buffers: shared hit=118
+ Planning Time: 0.520 ms
+ Execution Time: 0.217 ms
+(13 rows)
+
+ROLLBACK

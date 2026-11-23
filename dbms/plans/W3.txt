@@ -16,19 +16,19 @@ ON CONFLICT (company_id, quarter_end) DO UPDATE
 BEGIN
                                                             QUERY PLAN                                                             
 -----------------------------------------------------------------------------------------------------------------------------------
- Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.334..0.335 rows=0 loops=1)
+ Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.379..0.380 rows=0 loops=1)
    Conflict Resolution: UPDATE
    Conflict Arbiter Indexes: pk_financial_report
    Tuples Inserted: 0
    Conflicting Tuples: 1
-   Buffers: shared hit=44
-   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.065..0.073 rows=1 loops=1)
+   Buffers: shared hit=46
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.036..0.044 rows=1 loops=1)
          Index Cond: ((ticker)::text = 'TCK02500'::text)
          Buffers: shared hit=5
  Planning:
    Buffers: shared hit=108
- Planning Time: 0.505 ms
- Execution Time: 0.438 ms
+ Planning Time: 0.536 ms
+ Execution Time: 0.441 ms
 (13 rows)
 
 ROLLBACK
@@ -37,19 +37,19 @@ ROLLBACK
 BEGIN
                                                             QUERY PLAN                                                             
 -----------------------------------------------------------------------------------------------------------------------------------
- Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.198..0.198 rows=0 loops=1)
+ Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.228..0.229 rows=0 loops=1)
    Conflict Resolution: UPDATE
    Conflict Arbiter Indexes: pk_financial_report
    Tuples Inserted: 0
    Conflicting Tuples: 1
    Buffers: shared hit=43
-   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.023..0.023 rows=1 loops=1)
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.026..0.027 rows=1 loops=1)
          Index Cond: ((ticker)::text = 'TCK02500'::text)
          Buffers: shared hit=3
  Planning:
    Buffers: shared hit=108
- Planning Time: 0.353 ms
- Execution Time: 0.235 ms
+ Planning Time: 0.383 ms
+ Execution Time: 0.275 ms
 (13 rows)
 
 ROLLBACK
@@ -58,19 +58,19 @@ ROLLBACK
 BEGIN
                                                             QUERY PLAN                                                             
 -----------------------------------------------------------------------------------------------------------------------------------
- Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.204..0.204 rows=0 loops=1)
+ Insert on financial_report  (cost=0.28..8.30 rows=0 width=0) (actual time=0.316..0.316 rows=0 loops=1)
    Conflict Resolution: UPDATE
    Conflict Arbiter Indexes: pk_financial_report
    Tuples Inserted: 0
    Conflicting Tuples: 1
    Buffers: shared hit=43
-   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.024..0.025 rows=1 loops=1)
+   ->  Index Scan using uq_company_ticker on company  (cost=0.28..8.30 rows=1 width=230) (actual time=0.029..0.030 rows=1 loops=1)
          Index Cond: ((ticker)::text = 'TCK02500'::text)
          Buffers: shared hit=3
  Planning:
    Buffers: shared hit=108
- Planning Time: 0.327 ms
- Execution Time: 0.243 ms
+ Planning Time: 0.477 ms
+ Execution Time: 0.375 ms
 (13 rows)
 
 ROLLBACK

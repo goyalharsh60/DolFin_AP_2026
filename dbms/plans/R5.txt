@@ -9,71 +9,71 @@ ORDER BY c.company_id, r.quarter_end DESC;
 === run 1 ===
                                                                                 QUERY PLAN                                                                                
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- Unique  (cost=3.35..15479.96 rows=5000 width=75) (actual time=0.219..169.742 rows=5000 loops=1)
-   Buffers: shared hit=100451
-   ->  Incremental Sort  (cost=3.35..15229.96 rows=100000 width=75) (actual time=0.219..159.295 rows=100000 loops=1)
+ Unique  (cost=3.35..15479.31 rows=5000 width=75) (actual time=0.166..163.479 rows=5000 loops=1)
+   Buffers: shared hit=100446
+   ->  Incremental Sort  (cost=3.35..15229.31 rows=100000 width=75) (actual time=0.165..152.950 rows=100000 loops=1)
          Sort Key: c.company_id, r.quarter_end DESC
          Presorted Key: c.company_id
          Full-sort Groups: 2500  Sort Method: quicksort  Average Memory: 29kB  Peak Memory: 29kB
-         Buffers: shared hit=100451
-         ->  Merge Join  (cost=0.57..11719.12 rows=100000 width=75) (actual time=0.016..66.923 rows=100000 loops=1)
+         Buffers: shared hit=100446
+         ->  Merge Join  (cost=0.57..11717.98 rows=100000 width=75) (actual time=0.026..60.165 rows=100000 loops=1)
                Merge Cond: (c.company_id = r.company_id)
-               Buffers: shared hit=100448
-               ->  Index Scan using company_pkey on company c  (cost=0.28..199.28 rows=5000 width=43) (actual time=0.005..1.211 rows=5000 loops=1)
-                     Buffers: shared hit=75
-               ->  Index Scan using pk_financial_report on financial_report r  (cost=0.29..10257.54 rows=100000 width=36) (actual time=0.006..42.485 rows=100000 loops=1)
-                     Buffers: shared hit=100373
+               Buffers: shared hit=100443
+               ->  Index Scan using company_pkey on company c  (cost=0.28..199.28 rows=5000 width=43) (actual time=0.005..1.045 rows=5000 loops=1)
+                     Buffers: shared hit=72
+               ->  Index Scan using pk_financial_report on financial_report r  (cost=0.29..10256.19 rows=100000 width=36) (actual time=0.015..37.020 rows=100000 loops=1)
+                     Buffers: shared hit=100371
  Planning:
    Buffers: shared hit=182
- Planning Time: 0.588 ms
- Execution Time: 170.454 ms
+ Planning Time: 0.535 ms
+ Execution Time: 164.126 ms
 (18 rows)
 
 
 === run 2 ===
                                                                                 QUERY PLAN                                                                                
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- Unique  (cost=3.35..15479.96 rows=5000 width=75) (actual time=0.219..147.238 rows=5000 loops=1)
+ Unique  (cost=3.35..15479.31 rows=5000 width=75) (actual time=0.174..220.273 rows=5000 loops=1)
    Buffers: shared hit=100446
-   ->  Incremental Sort  (cost=3.35..15229.96 rows=100000 width=75) (actual time=0.218..137.916 rows=100000 loops=1)
+   ->  Incremental Sort  (cost=3.35..15229.31 rows=100000 width=75) (actual time=0.173..205.740 rows=100000 loops=1)
          Sort Key: c.company_id, r.quarter_end DESC
          Presorted Key: c.company_id
          Full-sort Groups: 2500  Sort Method: quicksort  Average Memory: 29kB  Peak Memory: 29kB
          Buffers: shared hit=100446
-         ->  Merge Join  (cost=0.57..11719.12 rows=100000 width=75) (actual time=0.020..54.471 rows=100000 loops=1)
+         ->  Merge Join  (cost=0.57..11717.98 rows=100000 width=75) (actual time=0.026..85.863 rows=100000 loops=1)
                Merge Cond: (c.company_id = r.company_id)
                Buffers: shared hit=100443
-               ->  Index Scan using company_pkey on company c  (cost=0.28..199.28 rows=5000 width=43) (actual time=0.006..1.037 rows=5000 loops=1)
+               ->  Index Scan using company_pkey on company c  (cost=0.28..199.28 rows=5000 width=43) (actual time=0.006..1.541 rows=5000 loops=1)
                      Buffers: shared hit=72
-               ->  Index Scan using pk_financial_report on financial_report r  (cost=0.29..10257.54 rows=100000 width=36) (actual time=0.008..34.463 rows=100000 loops=1)
+               ->  Index Scan using pk_financial_report on financial_report r  (cost=0.29..10256.19 rows=100000 width=36) (actual time=0.014..53.655 rows=100000 loops=1)
                      Buffers: shared hit=100371
  Planning:
    Buffers: shared hit=182
- Planning Time: 0.579 ms
- Execution Time: 147.832 ms
+ Planning Time: 0.606 ms
+ Execution Time: 221.209 ms
 (18 rows)
 
 
 === run 3 ===
                                                                                 QUERY PLAN                                                                                
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- Unique  (cost=3.35..15479.96 rows=5000 width=75) (actual time=0.341..149.825 rows=5000 loops=1)
+ Unique  (cost=3.35..15479.31 rows=5000 width=75) (actual time=0.208..140.291 rows=5000 loops=1)
    Buffers: shared hit=100446
-   ->  Incremental Sort  (cost=3.35..15229.96 rows=100000 width=75) (actual time=0.340..140.511 rows=100000 loops=1)
+   ->  Incremental Sort  (cost=3.35..15229.31 rows=100000 width=75) (actual time=0.207..130.862 rows=100000 loops=1)
          Sort Key: c.company_id, r.quarter_end DESC
          Presorted Key: c.company_id
          Full-sort Groups: 2500  Sort Method: quicksort  Average Memory: 29kB  Peak Memory: 29kB
          Buffers: shared hit=100446
-         ->  Merge Join  (cost=0.57..11719.12 rows=100000 width=75) (actual time=0.019..56.085 rows=100000 loops=1)
+         ->  Merge Join  (cost=0.57..11717.98 rows=100000 width=75) (actual time=0.026..49.264 rows=100000 loops=1)
                Merge Cond: (c.company_id = r.company_id)
                Buffers: shared hit=100443
-               ->  Index Scan using company_pkey on company c  (cost=0.28..199.28 rows=5000 width=43) (actual time=0.006..1.052 rows=5000 loops=1)
+               ->  Index Scan using company_pkey on company c  (cost=0.28..199.28 rows=5000 width=43) (actual time=0.005..0.840 rows=5000 loops=1)
                      Buffers: shared hit=72
-               ->  Index Scan using pk_financial_report on financial_report r  (cost=0.29..10257.54 rows=100000 width=36) (actual time=0.008..34.404 rows=100000 loops=1)
+               ->  Index Scan using pk_financial_report on financial_report r  (cost=0.29..10256.19 rows=100000 width=36) (actual time=0.014..29.914 rows=100000 loops=1)
                      Buffers: shared hit=100371
  Planning:
    Buffers: shared hit=182
- Planning Time: 0.561 ms
- Execution Time: 150.443 ms
+ Planning Time: 0.539 ms
+ Execution Time: 140.850 ms
 (18 rows)
 
